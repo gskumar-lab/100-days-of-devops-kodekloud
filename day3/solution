@@ -1,0 +1,20 @@
+#SSH into each app server
+
+ssh tony@<App-Server-IP>
+
+#Edit the SSH config file : /etc/ssh/sshd_config
+
+sudo vi /etc/ssh/sshd_config
+
+#Find and modify the PermitRootLogin directive
+
+"#PermitRootLogin yes"
+#Change it to:
+"PermitRootLogin no"
+
+#Restart the SSH service
+
+sudo systemctl restart sshd
+
+#Verify
+ssh root@<App-Server-IP>

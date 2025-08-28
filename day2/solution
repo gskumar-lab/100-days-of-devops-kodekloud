@@ -1,0 +1,8 @@
+#Login to App Server 1
+ssh <username>@<App-Server-1-IP>
+
+#Create the user kareem with expiry
+sudo useradd -e 2024-03-28 kareem
+
+#Verify user expiry
+sudo chage -l kareem
