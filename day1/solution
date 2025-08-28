@@ -1,0 +1,12 @@
+#Login to App Server 2
+
+ssh <username>@<App-Server-2-IP>
+
+#Create user yousuf with non-interactive shell
+
+sudo useradd -s /sbin/nologin yousuf
+
+#Verify the user creation
+
+grep yousuf /etc/passwd
+
