@@ -1,0 +1,24 @@
+#Switch to thor user on jump host
+
+sudo su - thor
+
+#Generate SSH key (if not already present)
+
+ssh-keygen -t rsa -b 2048
+
+#Just press Enter for all prompts (no passphrase).
+#Keys are stored in: ~/.ssh/id_rsa (private), ~/.ssh/id_rsa.pub (public).
+
+#Copy public key to each app server’s sudo user
+
+ssh-copy-id tony@<app-server1-hostname>
+ssh-copy-id steve@<app-server2-hostname>
+ssh-copy-id banner@<app-server3-hostname>
+
+#This command will ask for the password only once (first time), then append thor’s public key into:  /home/<sudo-user>/.ssh/authorized_keys
+
+#Test passwordless SSH from jump host as thor:
+
+ssh tony@<app-server1-hostname>
+
+#It should log in without a password.

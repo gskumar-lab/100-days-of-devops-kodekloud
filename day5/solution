@@ -1,0 +1,16 @@
+#Install Required Packages On RHEL / CentOS / Oracle Linux:
+
+sudo yum install -y selinux-policy selinux-policy-targeted policycoreutils
+
+#Check SELinux status
+
+sudo sestatus
+
+#Configure SELinux to be Disabled Permanently
+#Edit the configuration file:
+
+sudo vi /etc/selinux/config
+
+#Change the line:  SELINUX=disabled
+
+#Do NOT reboot

@@ -1,0 +1,13 @@
+#Login to App Server 1 (via jump host):
+
+ssh tony@stapp01.stratos.xfusioncorp.com
+
+#Grant executable permissions for all users:
+
+sudo chmod a+rx /tmp/xfusioncorp.sh
+
+a+rx → gives read and execute permission to user, group, and others.
+
+#Verify permissions:
+
+ls -l /tmp/xfusioncorp.sh

@@ -1,0 +1,25 @@
+#Install cronie and start the service on RHEL / CentOS / Fedora / Oracle Linux app servers:
+
+sudo yum install -y cronie
+sudo systemctl start crond
+sudo systemctl enable crond
+
+#Check service status:
+
+systemctl status crond
+
+#Add cron job for root user
+
+sudo crontab -e
+
+#Add this line at the bottom:
+
+*/5 * * * * echo hello > /tmp/cron_text
+
+#Verify cron job is added
+
+sudo crontab -l
+
+#After waiting 5 minutes, check the file:
+
+cat /tmp/cron_text
