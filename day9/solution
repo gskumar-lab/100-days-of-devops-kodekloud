@@ -1,0 +1,31 @@
+#SSH into the DB server
+
+ssh <db-server-name>
+
+#Check MariaDB service status
+
+sudo systemctl status mariadb
+
+#Start the service
+sudo systemctl start mariadb
+
+#Enable it on boot
+sudo systemctl enable mariadb
+
+#Confirm it’s running
+sudo systemctl status mariadb
+
+#Check logs if it fails
+
+sudo journalctl -xeu mariadb
+
+#here issue is MariaDB data directory is in  /var/lib/mysqld/  instead of  /var/lib/mysql/
+
+#Create a symlink so MariaDB finds the real data directory:
+
+sudo ln -s /var/lib/mysqld /var/lib/mysql
+
+#Then restart the service:
+
+sudo systemctl start mariadb
+sudo systemctl status mariadb

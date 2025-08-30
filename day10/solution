@@ -1,0 +1,49 @@
+#Pre-steps (manual, outside script)
+#On App Server 3:
+# Ensure zip is installed
+
+sudo yum install -y zip   # (for CentOS/RHEL)
+
+# Create directories if missing
+
+mkdir -p /scripts /backup
+
+#Setup passwordless SSH from App Server 3 → Backup Server (as the respective user, e.g., banner):
+
+ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+ssh-copy-id -i ~/.ssh/id_rsa.pub clint@stbkp01   # (Backup server user+host)
+
+-----------------------------------------------------------------------------------------
+
+#Script: /scripts/blog_backup.sh
+
+#!/bin/bash
+
+# Variables
+SRC_DIR="/var/www/html/blog"
+BACKUP_DIR="/backup"
+ARCHIVE_NAME="xfusioncorp_blog.zip"
+DEST_USER="clint"              # Backup server user
+DEST_HOST="stbkp01"            # Backup server hostname
+DEST_DIR="/backup/"
+
+# Create archive
+zip -r "${BACKUP_DIR}/${ARCHIVE_NAME}" "${SRC_DIR}" > /dev/null 2>&1
+
+# Copy to backup server
+scp "${BACKUP_DIR}/${ARCHIVE_NAME}" ${DEST_USER}@${DEST_HOST}:${DEST_DIR}
+
+-------------------------------------------------------------------------------------------
+
+
+#Permissions
+
+chmod +x /scripts/blog_backup.sh
+
+#Test - Run as the respective user (not root, not sudo):
+
+/scripts/blog_backup.sh
+
+#It should create /backup/xfusioncorp_blog.zip locally.
+#Then copy it to /backup/ on the Nautilus Backup Server.
+#No password prompt if SSH keys are set up correctly.

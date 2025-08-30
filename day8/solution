@@ -1,0 +1,17 @@
+#Ensure pip3 is installed
+
+sudo yum install -y python3-pip
+
+#Install Ansible version 4.9.0 globally, Use --prefix=/usr/local so the binary is available system-wide:
+
+sudo pip3 install ansible==4.9.0 --prefix=/usr/local
+
+#This will place ansible under /usr/local/bin.
+
+#Verify PATH, Sometimes /usr/local/bin is not in $PATH for all users. Ensure it is:
+
+echo $PATH
+
+#Verify Ansible installation
+
+ansible --version
