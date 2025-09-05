@@ -1,0 +1,57 @@
+#Login into each app server and make sure httpd service is running. We have to find in which port they are running:
+
+sudo ss -tlnu
+
+#Login into lbr server and install nginx
+
+sudo yum install nginx -y
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+#Configure Load Balancer, lets modify /etc/nginx/nginx.conf:
+#First, lets add upstream servers. copy and paste following servers inside http section just before server:80 in /etc/nginx/nginx.conf file:
+
+----------------------------------------------------------
+
+    upstream stapp {
+    server stapp01:5001;
+    server stapp02:5001;
+    server stapp03:5001;
+}
+
+-----------
+
+#Then redirect call to these server using proxy_pass, copy paste following lines inside server:80:
+
+-----------
+
+location / {
+    proxy_pass http://stapp;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+
+    proxy_connect_timeout 5s;
+    proxy_read_timeout 60s;
+}
+
+------------------------------------------------------------
+
+#Done, lets check config is okay and restart nginx server:
+
+sudo nginx -t
+sudo systemctl restart nginx
+
+#Verify Setup
+#Make sure Apache is running on all app servers:
+
+systemctl status httpd   # or apache2, depending on OS
+
+#Then from LBR server, test:
+
+curl http://localhost

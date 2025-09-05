@@ -1,0 +1,47 @@
+#SSH into appserver
+
+ssh tony@appserver-IP
+
+#Install nginx
+
+sudo yum install nginx -y
+
+#Change default index.html content:
+
+echo "Welcome!" | sudo tee /usr/share/nginx/html/index.html
+
+#Restart and check if nginx is accesible from jump host:
+
+sudo systemctl restart nginx
+curl http://stapp03
+
+#Copy ssl from /tmp:
+
+sudo mkdir -p /etc/certs
+sudo cp /tmp/nautilus.* /etc/certs
+
+#Configure SSL:
+
+sudo vi /etc/nginx/nginx.conf
+
+#We have to be cautious here, otherwise nginx could be broken.
+#We need to add this line inside server:80 just after server_name.
+
+return 301 https://$host$request_uri;
+
+#Then we have to uncomment server:443 and add following lines:
+
+ssl_certificate     /etc/certs/nautilus.crt;
+ssl_certificate_key /etc/certs/nautilus.key;
+
+#If you need to update anything else do respectively. Before restart the ngninx server make sure you are testin it using:
+
+sudo nginx -t
+
+#If it returns successful, you are ready to restart nginx:
+
+sudo systemctl restart nginx
+
+#Finally test from Jumphost
+
+curl -Ik https://<app-server-ip>/

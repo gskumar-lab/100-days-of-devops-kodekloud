@@ -1,0 +1,50 @@
+#Install Tomcat server - SSH into App Server 1 from Jump Host:
+
+ssh tony@stapp01
+
+#Update packages and install Tomcat: On RHEL/CentOS:
+
+sudo yum install -y tomcat 
+
+#Configure Tomcat to run on port 3000
+#Edit the server.xml file:
+
+sudo vi /etc/tomcat/server.xml
+
+--------------------------------------------------
+#Locate the Connector section (default is 8080):
+
+<Connector port="8080" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+
+#Change port to 3000:
+
+<Connector port="3000" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+--------------------------------------------------
+
+#Deploy the ROOT.war
+#Copy ROOT.war from Jump Host to App Server 1:
+#From Jump Host:
+
+scp /tmp/ROOT.war tony@stapp01:/tmp/
+
+#Move it to Tomcat’s webapps directory: On RHEL/CentOS:
+
+sudo mv /tmp/ROOT.war /usr/share/tomcat/webapps/ROOT.war
+
+#Restart Tomcat
+
+sudo systemctl restart tomcat
+sudo systemctl enable tomcat
+
+#Check if Tomcat is running:
+
+sudo systemctl status tomcat
+
+#From Jump Host:
+
+curl http://stapp01:3000
+

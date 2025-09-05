@@ -1,0 +1,34 @@
+#SSH into each App Server
+
+ssh tony@stapp01
+
+sudo su -
+
+#Repeat for stapp02, stapp03.
+#Install iptables
+
+yum install -y iptables iptables-services
+
+#Identify LBR Host IP - from JumpHost
+
+cat /etc/hosts
+
+#OR get from server details
+
+#Configure iptables Rules
+#Then allow LBR host only on port 6400:
+
+iptables -A INPUT -p tcp -s <LBR HOST IP> --dport 6400 -j ACCEPT
+
+#Block everyone else:
+
+iptables -A INPUT -p tcp --dport 6400 -j REJECT
+
+#Save Rules for Persistence
+
+service iptables save
+systemctl enable iptables
+
+#Verify Rules
+
+iptables --list-rules

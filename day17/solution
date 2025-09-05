@@ -1,0 +1,33 @@
+#SSH into DB server
+#Switch to the postgres system user
+#Postgres databases are usually managed by the postgres user.
+
+sudo -i -u postgres
+
+#Log in to PostgreSQL prompt
+
+psql
+
+#Create the database user with password
+
+CREATE USER kodekloud_pop WITH PASSWORD '8FmzjvFU6S';
+
+#Create the database
+
+CREATE DATABASE kodekloud_db6;
+
+#Grant full permissions on the database to the user
+
+GRANT ALL PRIVILEGES ON DATABASE kodekloud_db6 TO kodekloud_pop;
+
+#Verify (optional) - Check if the user has access:
+
+\du
+\l
+
+# \du → shows roles/users
+# \l → shows databases and owners
+
+#Exit
+
+exit

@@ -1,0 +1,73 @@
+#check which app server is on fault
+
+curl http://stapp01:6400
+curl http://stapp02:6400
+curl http://stapp03:6400
+
+
+#If Apache is up, you’ll at least get a response (maybe an empty/default page, but not a connection error).
+#If it’s down, you’ll see something like: Connection refused - Failed to connect - Could not resolve host
+
+#SSH into each  App server
+
+ssh tony@stapp01
+sudo su -
+
+#Repeat for stapp02 and stapp03.
+#Check Apache service status
+
+systemctl status httpd
+
+#Start/Enable Apache
+
+systemctl enable httpd
+systemctl start httpd
+
+#Configure Apache to run on port 6400
+#Edit Apache config:
+
+vi /etc/httpd/conf/httpd.conf
+
+#Find:
+
+Listen 80
+
+#Change to:
+
+Listen 6400
+
+#Restart Apache
+
+systemctl restart httpd  
+
+#Verify Apache is running on port 6400
+
+netstat -tulnp | grep 6400
+
+#In this case, sendmail is running on port 6400
+#either change port for sendmail or stop it
+
+hanging sendmail port
+
+cd /etc/mail
+cp sendmail.mc sendmail.mc.bak
+
+vi sendmail.mc
+
+------------------------------------------------------------------
+
+#Find the following line and change port with some other value (i,e; 1234):
+
+DAEMON_OPTIONS(`Port=6400,Addr=127.0.0.1, Name=MTA')dnl
+
+----------------------------------------------------------------
+
+sudo systemctl restart sendmail
+
+#Now lets check port and servicec status
+
+sudo netstat -tlnup
+
+sudo systemctl status httpd sendmail
+
+#Repeat on all App servers if needed

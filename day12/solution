@@ -1,0 +1,54 @@
+#SSH into the affected App Server (say stapp01) - From jump host:
+
+ssh tony@stapp01
+
+#Check if Apache is running
+
+sudo systemctl status httpd
+
+#If it’s inactive, start it:
+
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+#Verify Apache is listening on port 8084
+
+sudo netstat -tulnp | grep httpd
+
+#Check Firewall
+
+sudo firewall-cmd --list-all
+
+# or
+
+sudo iptables -L -n
+
+
+#If 8084 is blocked, allow it:
+#To allow traffic on port 8084:
+
+sudo iptables -I INPUT -p tcp --dport 8084 -j ACCEPT
+
+#Save the rule permanently:
+
+sudo iptables-save | sudo tee /etc/sysconfig/iptables
+
+#Then restart:
+
+sudo systemctl restart iptables
+
+#Test Locally - From stapp01 itself:
+
+curl http://localhost:8084
+
+#If you see the HTML output, Apache is fine.
+#Double-check /etc/hosts (only if DNS issue suspected)
+#On Jump Host, make sure stapp01 resolves correctly:
+
+getent hosts stapp01
+
+#It should return the internal IP of App Server 1.
+
+#Test from Jump Host
+
+curl http://stapp01:8084
