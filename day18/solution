@@ -1,0 +1,46 @@
+#Configure App Servers
+#Install httpd, php and php-mysqli:
+
+sudo yum install -y httpd php php-mysqli
+
+#Change Apache port and Restart service
+
+sudo vi /etc/httpd/conf/httpd.conf
+
+#Change port: Listen 80 to: Listen 3003
+
+#Enable/start Apache
+
+sudo systemctl enable httpd
+sudo systemctl start httpd
+
+#Follow above steps for all app servers
+
+#Configure Database Server
+
+sudo yum install -y mariadb-server
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
+
+sudo systemctl status mariadb | grep "running"
+
+#Login and create DB/user
+
+mysql -u root
+
+#Inside MySQL shell:
+-------------------------------------
+CREATE DATABASE kodekloud_db8;
+CREATE USER 'kodekloud_top'@'%' IDENTIFIED BY 'TmPcZjtRQx';
+GRANT ALL PRIVILEGES ON kodekloud_db8.* TO 'kodekloud_top'@'%';
+FLUSH PRIVILEGES;
+EXIT;
+-------------------------------------
+#  '%' This allows remote connection otherwise user will be failed to connect DB.
+
+#Restart:
+
+sudo systemctl restart mariadb
+
+#Verify Result
+#Click on App button to see the result
