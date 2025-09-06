@@ -1,0 +1,14 @@
+#Install Git using yum
+#Log in to the Storage server first (via SSH). Then run:
+
+sudo yum install -y git
+
+#Create a bare Git repository
+#A bare repository is typically used as a central repo (no working directory).
+
+sudo mkdir -p /opt/blog.git
+sudo git init --bare /opt/blog.git
+
+#Verify the repository - Check that Git repo files are created:
+
+ls -l /opt/blog.git

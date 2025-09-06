@@ -1,0 +1,31 @@
+#On App Server 2
+#Install Apache
+
+sudo yum install -y httpd
+
+#Change Apache port to 5000
+#Edit config:
+
+sudo vi /etc/httpd/conf/httpd.conf
+
+#Find:  Listen 80   Change to:    Listen 5000
+
+#Copy website files from jump_host
+#From jump_host, transfer backups to App Server 2:
+
+scp -r /home/thor/beta /home/thor/demo <user>@<app2_ip>:/tmp/
+
+#On App Server 2, move them into Apache document root:
+
+sudo mv /tmp/beta /var/www/html/
+sudo mv /tmp/demo /var/www/html/
+
+#Start & enable Apache
+
+sudo systemctl enable httpd
+sudo systemctl restart httpd
+
+#Test with curl
+
+curl http://localhost:5000/beta/
+curl http://localhost:5000/demo/

@@ -1,0 +1,16 @@
+#SSH into storage server
+
+ssh natasha@<IP>
+
+#goto to destination
+
+cd /usr/src/kodekloudrepos
+
+#Clone the repository
+
+sudo git clone /opt/official.git
+
+#Verify the clone
+#Check that the repo is cloned properly:
+
+ls -la /usr/src/kodekloudrepos

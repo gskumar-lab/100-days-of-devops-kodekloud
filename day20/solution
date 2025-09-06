@@ -1,0 +1,33 @@
+#Login into App Server and run the following commands:
+
+sudo dnf update
+sudo dnf install nginx -y
+sudo dnf module install php:8.1 -y
+
+#It will update packge repo
+#Install nginx and php with expected version
+
+#Configure php-fpm config:
+
+sudo mkdir -p /var/run/php-fpm
+sudo vi /etc/php-fpm.d/www.conf
+
+#listen = /run/php-fpm/www.sock   update this line with expected directory. It should be   listen = /var/run/php-fpm/default.sock
+#Configure nginx
+
+sudo vi /etc/nginx/nginx.conf
+
+#change port 80 to 8098
+#Configure php with nginx
+
+sudo vi /etc/nginx/default.d/php.conf
+
+#Update   fastcgi_pass php-fpm;   to this:   fastcgi_pass unix:/var/run/php-fpm/default.sock;
+#Restart php-fpm and nginx
+
+sudo systemctl enable --now nginx
+sudo systemctl enable --now php-fpm
+
+#Test from jumphost:
+
+curl http://stapp02:8098/index.php
